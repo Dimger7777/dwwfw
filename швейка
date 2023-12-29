@@ -1,0 +1,151 @@
+
+import tkinter as tk
+from python_imagesearch.imagesearch import *
+import pyautogui
+import imageio
+from PIL import Image, ImageTk
+import pygame.mixer
+import keyboard
+from bson import ObjectId
+from pymongo import MongoClient
+import threading
+from datetime import datetime, timedelta
+import time
+
+# Определение глобальных переменных
+is_on = False
+# license_expired = False
+# license_start_time = datetime.now().replace(month=10, year=2023, day=2, hour=9, minute=44, second=0, microsecond=0)
+# license_end_time = datetime.now().replace(month=10, year=2030, day=2, hour=9, minute=44, second=10, microsecond=0)
+
+def set_background_gif(gif_path):
+    gif = imageio.mimread(gif_path)
+    gif_images = [Image.fromarray(img) for img in gif]
+
+    global label
+    label = tk.Label(root)
+    label.pack()
+
+    def update_gif(index):
+        img = ImageTk.PhotoImage(gif_images[index])
+        label.config(image=img)
+        label.image = img
+        root.after(100, update_gif, (index + 1) % len(gif_images))
+
+    update_gif(0)
+
+def turn_on():
+    global is_on
+    is_on = True
+    label.config(text="Состояние: ON")
+
+def turn_off():
+    global is_on
+    is_on = False
+    label.config(text="Состояние: OFF")
+
+def exit_program():
+    root.destroy()
+root = tk.Tk()
+root.title("Управление")
+off_button = tk.Button(root, text="OFF", command=turn_off, width=10, height=2, activebackground='Orange', background='Red', default='active', state='active')
+exit_button = tk.Button(root, text="EXIT", command=exit_program, width=10, height=2)
+on_button = tk.Button(root, text="ON", command=turn_on, activebackground='Green', background='Blue')
+off_button.place(x=400, y=100)
+on_button.pack()
+off_button.pack()
+exit_button.pack()
+
+# Создаем поле для ввода пароля
+# password_entry = tk.Entry(root)
+# password_entry.pack()
+# Создаем кнопку для ввода пароля
+# password_button = tk.Button(root, text="Ввести пароль", command=handle_password_input)
+# password_button.pack()
+root.geometry("800x450")
+is_on = False  # Изначально выключено
+# Установим фоновую анимацию GIF
+set_background_gif("outerspace-58.gif")  # Укажите путь к вашей анимации GIF
+# Остальной код остается неизменным
+keyboard_mapping = {
+    'e': 'у',
+    'a': 'ф',
+    'd': 'в',
+    's': 'ы',
+    'w': 'ц',
+    # Добавьте остальные клавиши по аналогии
+}
+# Создаем функцию для проверки и выполнения действий
+def check_and_execute_actions():
+    if is_on:   
+        button_e = imagesearch("C:/qwerty/e.jpg") 
+        if button_e[0] != -1: 
+            print("position: ", button_e[0], button_e[1])
+            try:
+                keyboard.press_and_release(keyboard_mapping['e'])  # Если возникла ошибка, используем keyboard
+            except Exception as e:
+                print("Ошибка при использовании pyautogui:", e)
+                print("Используем keyboard вместо pyautogui")
+                pyautogui.press('e')  # Попробуем выполнить нажатие с помощью pyautogui
+        else: 
+            print("E не найдена")
+        button_a = imagesearch("C:/qwerty/q.jpg") 
+        if button_a[0] != -1: 
+            print("position: ", button_a[0], button_a[1]) 
+            try:
+                keyboard.press_and_release(keyboard_mapping['a'])  # Если возникла ошибка, используем keyboard
+            except Exception as e:
+                print("Ошибка при использовании pyautogui:", e)
+                print("Используем keyboard вместо pyautogui")   
+                pyautogui.press('a')  # Попробуем выполнить нажатие с помощью pyautogui
+        else: 
+            print("A не найдена")
+        button_d = imagesearch("C:/qwerty/d.jpg") 
+        if button_d[0] != -1: 
+            print("position: ", button_d[0], button_d[1]) 
+            try:
+                keyboard.press_and_release(keyboard_mapping['d'])  # Если возникла ошибка, используем keyboard
+            except Exception as e:
+                print("Ошибка при использовании pyautogui:", e)
+                print("Используем keyboard вместо pyautogui")
+                
+                pyautogui.press('d')  # Попробуем выполнить нажатие с помощью pyautogui
+        else: 
+            print("D не найдена")
+        button_s = imagesearch("C:/qwerty/s.jpg") 
+        if button_s[0] != -1: 
+            print("position: ", button_s[0], button_s[1]) 
+            try:
+                keyboard.press_and_release(keyboard_mapping['s'])  # Если возникла ошибка, используем keyboard
+            except Exception as e:
+                print("Ошибка при использовании pyautogui:", e)
+                print("Используем keyboard вместо pyautogui")
+                pyautogui.press('s')  # Попробуем выполнить нажатие с помощью pyautogui
+        else: 
+            print("S не найдена")
+        button_w = imagesearch("C:/qwerty/w.jpg") 
+        if button_w[0] != -1: 
+            print("position: ", button_w[0], button_w[1]) 
+            try:
+                keyboard.press_and_release(keyboard_mapping['w'])  # Если возникла ошибка, используем keyboard
+            except Exception as e:
+                print("Ошибка при использовании pyautogui:", e)
+                print("Используем keyboard вместо pyautogui")
+                pyautogui.press('w')  # Попробуем выполнить нажатие с помощью pyautogui
+        else: 
+            print("W не найдена")
+        button_q2 = imagesearch("C:/qwerty/q2.png")
+        if button_q2[0] != -1:
+            pygame.mixer.init()
+            pygame.mixer.music.load("F:/gfgqw/obratnyiy-otschet-na-ustroystve-27320.mp3")
+            pygame.mixer.music.play()
+
+    label.lower()
+    root.update()
+    root.after(100, check_and_execute_actions)  # Запуск функции через 100 миллисекунд
+
+# Запускаем функцию для проверки и выполнения действий
+check_and_execute_actions()
+
+root.mainloop()
+
