@@ -1,0 +1,164 @@
+import sys
+from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
+from PyQt5.QtGui import QColor, QLinearGradient, QPainter, QFont
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel
+import pygetwindow as gw
+import time
+import keyboard
+from python_imagesearch.imagesearch import *
+import pyautogui
+import pygame.mixer
+class ImageSearchThread(QThread):
+    found_signal = pyqtSignal(bool)
+
+    def run(self):
+        while True:
+            pyautogui.press('e')
+            time.sleep(0.01)
+            button_down = imagesearch("C:/qwerty/Screenshot_282.png")
+            if button_down[0] != -1:
+                pyautogui.press('down')
+            else:
+                print("E not found")
+
+            time.sleep(0.01)
+            button_up = imagesearch("C:/qwerty/Screenshot_281.png")
+            if button_up[0] != -1:
+                pyautogui.press('up')
+            else:
+                print("E not found")
+            time.sleep(0.01)
+            button_left = imagesearch("C:/qwerty/Screenshot_283.png")
+            if button_left[0] != -1:
+                pyautogui.press('left')
+
+            else:
+                print("E not found")
+            time.sleep(0.01)
+            button_right = imagesearch("C:/qwerty/Screenshot_122121.png")
+            if button_right[0] != -1:
+                pyautogui.press('right')
+
+            else:
+                print("E not found")
+
+class OverlayWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setGeometry(0, 0, 500, 500)
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+        self.setAttribute(Qt.WA_TranslucentBackground)
+
+        self.initUI()
+
+        self.is_running = False
+        self.start_time = None
+
+        # Create an instance of the ImageSearchThread
+        self.image_search_thread = ImageSearchThread()
+        self.image_search_thread.found_signal.connect(self.handle_image_found)
+        self.image_search_thread.start()
+
+    def initUI(self):
+        gradient = QLinearGradient(0, 0, 0, 1080)
+        color_blue = QColor(Qt.blue)
+        color_blue.setAlpha(200)
+        gradient.setColorAt(0, color_blue)
+
+        color_magenta = QColor(Qt.magenta)
+        color_magenta.setAlpha(200)
+        gradient.setColorAt(1, color_magenta)    
+
+        self.background_gradient = gradient
+
+        central_widget = QWidget(self)
+        self.setCentralWidget(central_widget)
+
+        layout = QVBoxLayout(central_widget)
+        layout.addStretch(1)
+
+        self.label_seconds = QLabel("0", self)
+        font = QFont("Arial", 48)  # Change font size according to your preference
+        self.label_seconds.setFont(font)
+        layout.addWidget(self.label_seconds)
+
+        # Mouse movement tracking
+        self.setMouseTracking(True)
+        # Set a blank cursor
+        self.setCursor(Qt.BlankCursor)
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.SmoothPixmapTransform)
+        painter.fillRect(self.rect(), self.background_gradient)
+
+    def check_game_fullscreen(self):
+        if keyboard.is_pressed('F4'):
+            self.showNormal()
+            self.show()  # Ensure the window is visible after returning from fullscreen mode
+        if keyboard.is_pressed('F8'):
+            self.hide()
+
+        game_window = gw.getWindowsWithTitle('RАGЕ Multiрlayer')
+        game_window_1 = gw.getWindowsWithTitle('RАGЕ Мultiplayer ')
+        game_window_2 = gw.getWindowsWithTitle('RAGЕ Multiрlауеr  ')
+        game_window_3 = gw.getWindowsWithTitle('RAGЕ Multiрlауеr   ')
+        game_window_4 = gw.getWindowsWithTitle('RAGЕ Multiрlауеr    ')
+        if (game_window and game_window[0].isActive) or (game_window_1 and game_window_1[0].isActive) or (game_window_2 and game_window_2[0].isActive) or (game_window_3 and game_window_3[0].isActive) or (game_window_4 and game_window_4[0].isActive):
+            self.show()
+        else:
+            self.hide()
+
+        # Start the timer automatically
+        if not self.is_running:
+            self.is_running = True
+            self.start_time = time.time() - self.elapsed_time()
+            self.update_display()
+
+        # Make sure the cursor remains hidden
+        self.setCursor(Qt.BlankCursor)
+
+    def elapsed_time(self):
+        if self.start_time is None:
+            return 0
+        return time.time() - self.start_time
+
+    def update_display(self):
+        if self.is_running:
+            elapsed_time = self.elapsed_time()
+            self.label_seconds.setText(str(round(elapsed_time)))
+            QTimer.singleShot(100, self.update_display)
+
+    def reset(self, event=None):
+        self.is_running = False
+        self.start_time = None
+        self.label_seconds.setText("0")
+
+        # Close the application when 'k' is pressed
+        if event:
+            QApplication.quit()
+
+    def handle_image_found(self, found):
+        if found:
+            print("Image found!")  # Add your logic here
+
+if __name__ == "__main__":
+    # Get window titles
+    windows = gw.getAllTitles()
+    print(windows)
+
+    app = QApplication(sys.argv)
+    overlay = OverlayWindow()
+
+    # Set up a timer to check for fullscreen mode
+    fullscreen_timer = QTimer()
+    fullscreen_timer.timeout.connect(overlay.check_game_fullscreen)
+    fullscreen_timer.start(1000)  # Check every second
+
+    # Handle 'k' key press to reset and quit the application
+    keyboard.on_press_key('k', overlay.reset)
+
+    sys.exit(app.exec_())
+    
