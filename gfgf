@@ -1,0 +1,63 @@
+from python_imagesearch.imagesearch import *
+import pyautogui 
+import time 
+import tkinter as tk
+import pygame.mixer
+# Функции для обработки событий кнопок
+def turn_on():
+    global is_on
+    is_on = True
+    label.config(text="Состояние: ON")
+
+def turn_off():
+    global is_on
+    is_on = False
+    label.config(text="Состояние: OFF")
+
+def exit_program():
+    root.destroy()
+
+# Создаем главное окно
+root = tk.Tk()
+root.title("Управление")
+
+# Устанавливаем размер окна на 320x400 пикселей
+root.geometry("320x400")
+
+# Создаем метку для отображения состояния
+label = tk.Label(root, text="Состояние: ")
+label.pack()
+
+# Создаем кнопки ON, OFF и EXIT
+is_on = False  # Изначально выключено
+on_button = tk.Button(root, text="ON", command=turn_on)
+on_button.pack()
+    
+off_button = tk.Button(root, text="OFF", command=turn_off, width=10, height=2)
+off_button.pack()
+
+exit_button = tk.Button(root, text="EXIT", command=exit_program, width=10, height=2)
+exit_button.pack()
+
+# button_e1 = imagesearch("C:/qwerty/eee.jpg") 
+# button_e = imagesearch("C:/qwerty/e.jpg")
+# button_q = imagesearch("C:/qwerty/q.jpg")
+# НАДО JPG
+while True: 
+    if is_on:   
+        button_e = imagesearch("C:/qwerty/ee.png")
+        
+        if button_e[0] != -1:
+            pyautogui.press('e')
+            button_e1 = imagesearch("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_304.png")
+            if button_e1[0] != -1:
+                pyautogui.press('e')
+        button_q2 = imagesearch("C:\qwerty\q2.png")
+        if button_q2[0] != -1:
+            pygame.mixer.init()
+            pygame.mixer.music.load("F:/gfgqw/obratnyiy-otschet-na-ustroystve-27320.mp3")
+            pygame.mixer.music.play()
+                
+    # if button_q[0] != -1:
+        # exit()
+    root.update()  # Обновляем графический интерфейс    
