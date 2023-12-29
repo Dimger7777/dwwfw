@@ -1,0 +1,85 @@
+import pandas as pd
+import random
+import string
+import sqlite3
+import tkinter as tk
+import threading
+from python_imagesearch.imagesearch import *
+import keyboard
+# Функция для генерации случайных строк
+# def generate_random_string(length):
+#     letters = string.ascii_letters
+#     return ''.join(random.choice(letters) for _ in range(length))
+
+# # Инициализируем соединение с базой данных SQLite
+# conn = sqlite3.connect('my_database.db')
+# df = pd.read_csv('my_dataframe1.csv', index_col=0)
+# # Загружаем DataFrame в базу данных
+# df.to_sql('my_table', conn, if_exists='replace', index_label='index')
+
+# Функции для обработки событий кнопок
+def turn_on():
+    global is_on
+    is_on = True
+    label.config(text="Состояние: ON")
+
+def turn_off():
+    global is_on
+    is_on = False
+    label.config(text="Состояние: OFF")
+
+def exit_program():
+    root.destroy()
+# Создаем главное окно
+root = tk.Tk()
+root.title("Управление")
+
+# Устанавливаем размер окна на 320x400 пикселей
+root.geometry("320x400")
+
+# Создаем метку для отображения состояния
+label = tk.Label(root, text="Состояние: ")
+label.pack()
+
+# Создаем кнопки ON, OFF и EXIT
+is_on = False  # Изначально выключено
+on_button = tk.Button(root, text="ON", command=turn_on)
+on_button.pack()
+
+off_button = tk.Button(root, text="OFF", command=turn_off, width=10, height=2)
+off_button.pack()
+
+exit_button = tk.Button(root, text="EXIT", command=exit_program, width=10, height=2)
+exit_button.pack()
+
+# # Создаем поле для ввода пароля
+# password_entry = tk.Entry(root)
+# password_entry.pack()
+
+# Создаем кнопку для ввода пароля
+# password_button = tk.Button(root, text="Ввести пароль", command=handle_password_input)
+# password_button.pack()
+
+# # Запускаем проверку лицензии в отдельном потоке
+# license_thread = threading.Thread(target=check_license)
+# license_thread.daemon = True
+# license_thread.start()
+keyboard_mapping = {
+    'e': 'у',
+    'a': 'ф',
+    'f': 'а',
+    # Добавьте остальные клавиши по аналогии
+}
+while True:
+    if is_on:
+        button_down = imagesearch("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_343.png")
+        if button_down[0] != -1:
+            pyautogui.press('e')  # Попробуем выполнить нажатие с помощью pyautogui
+        button_up = imagesearch("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_344.png")
+        if button_up[0] != -1:
+            pyautogui.press('f')  # Попробуем выполнить нажатие с помощью pyautogui
+        button_left = imagesearch("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_345.png")
+        if button_left[0] != -1:
+            for i in range(1,10):
+                pyautogui.press('y')  # Попробуем выполнить нажатие с помощью pyautogui
+    root.update()
