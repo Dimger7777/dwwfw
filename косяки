@@ -1,10 +1,46 @@
 import sys
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
 from PyQt5.QtGui import QColor, QLinearGradient, QPainter, QFont
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel
 import pygetwindow as gw
 import time
-import keyboard  # Импортируем библиотеку keyboard
+import keyboard
+from python_imagesearch.imagesearch import *
+import pyautogui
+import pygame.mixer
+class ImageSearchThread(QThread):
+    found_signal = pyqtSignal(bool)
+
+    def run(self):
+        while True:
+            pyautogui.press('e')
+            time.sleep(0.01)
+            button_down = imagesearch("C:/qwerty/Screenshot_282.png")
+            if button_down[0] != -1:
+                pyautogui.press('down')
+            else:
+                print("E not found")
+
+            time.sleep(0.01)
+            button_up = imagesearch("C:/qwerty/Screenshot_281.png")
+            if button_up[0] != -1:
+                pyautogui.press('up')
+            else:
+                print("E not found")
+            time.sleep(0.01)
+            button_left = imagesearch("C:/qwerty/Screenshot_283.png")
+            if button_left[0] != -1:
+                pyautogui.press('left')
+
+            else:
+                print("E not found")
+            time.sleep(0.01)
+            button_right = imagesearch("C:/qwerty/Screenshot_122121.png")
+            if button_right[0] != -1:
+                pyautogui.press('right')
+
+            else:
+                print("E not found")
 
 class OverlayWindow(QMainWindow):
     def __init__(self):
@@ -13,11 +49,16 @@ class OverlayWindow(QMainWindow):
         self.setGeometry(0, 0, 500, 500)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
-        
+
         self.initUI()
 
         self.is_running = False
         self.start_time = None
+
+        # Create an instance of the ImageSearchThread
+        self.image_search_thread = ImageSearchThread()
+        self.image_search_thread.found_signal.connect(self.handle_image_found)
+        self.image_search_thread.start()
 
     def initUI(self):
         gradient = QLinearGradient(0, 0, 0, 1080)
@@ -38,13 +79,13 @@ class OverlayWindow(QMainWindow):
         layout.addStretch(1)
 
         self.label_seconds = QLabel("0", self)
-        font = QFont("Arial", 48)  # Измените размер шрифта по своему вкусу
+        font = QFont("Arial", 48)  # Change font size according to your preference
         self.label_seconds.setFont(font)
         layout.addWidget(self.label_seconds)
 
-        # Отслеживание движения мыши
+        # Mouse movement tracking
         self.setMouseTracking(True)
-        # Установка пустого курсора
+        # Set a blank cursor
         self.setCursor(Qt.BlankCursor)
 
     def paintEvent(self, event):
@@ -56,7 +97,7 @@ class OverlayWindow(QMainWindow):
     def check_game_fullscreen(self):
         if keyboard.is_pressed('F4'):
             self.showNormal()
-            self.show()  # Убедиться, что окно видимо после возврата из полноэкранного режима
+            self.show()  # Ensure the window is visible after returning from fullscreen mode
         if keyboard.is_pressed('F8'):
             self.hide()
 
@@ -69,13 +110,14 @@ class OverlayWindow(QMainWindow):
             self.show()
         else:
             self.hide()
-        # Запустим секундомер автоматически
+
+        # Start the timer automatically
         if not self.is_running:
             self.is_running = True
             self.start_time = time.time() - self.elapsed_time()
             self.update_display()
 
-        # Убедимся, что курсор остается скрытым
+        # Make sure the cursor remains hidden
         self.setCursor(Qt.BlankCursor)
 
     def elapsed_time(self):
@@ -89,22 +131,34 @@ class OverlayWindow(QMainWindow):
             self.label_seconds.setText(str(round(elapsed_time)))
             QTimer.singleShot(100, self.update_display)
 
-    def reset(self, event=None):  # Добавляем параметр event
+    def reset(self, event=None):
         self.is_running = False
         self.start_time = None
         self.label_seconds.setText("0")
 
+        # Close the application when 'k' is pressed
+        if event:
+            QApplication.quit()
+
+    def handle_image_found(self, found):
+        if found:
+            print("Image found!")  # Add your logic here
+
 if __name__ == "__main__":
+    # Get window titles
     windows = gw.getAllTitles()
     print(windows)
+
     app = QApplication(sys.argv)
     overlay = OverlayWindow()
 
+    # Set up a timer to check for fullscreen mode
     fullscreen_timer = QTimer()
     fullscreen_timer.timeout.connect(overlay.check_game_fullscreen)
-    fullscreen_timer.start(1000)  # Проверка каждую секунду
+    fullscreen_timer.start(1000)  # Check every second
 
-    # Добавим обработку нажатия клавиши K
+    # Handle 'k' key press to reset and quit the application
     keyboard.on_press_key('k', overlay.reset)
 
     sys.exit(app.exec_())
+    
