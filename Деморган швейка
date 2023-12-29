@@ -1,0 +1,339 @@
+
+import tkinter as tk
+from python_imagesearch.imagesearch import *
+import pyautogui
+import imageio
+from PIL import Image, ImageTk
+import pygame.mixer
+import keyboard
+from bson import ObjectId
+from pymongo import MongoClient
+import threading
+from datetime import datetime, timedelta
+import time
+import pyperclip
+# Определение глобальных переменных
+is_on = False
+# license_expired = False
+# license_start_time = datetime.now().replace(month=10, year=2023, day=2, hour=9, minute=44, second=0, microsecond=0)
+# license_end_time = datetime.now().replace(month=10, year=2030, day=2, hour=9, minute=44, second=10, microsecond=0)
+
+def set_background_gif(gif_path):
+    gif = imageio.mimread(gif_path)
+    gif_images = [Image.fromarray(img) for img in gif]
+
+    global label
+    label = tk.Label(root)
+    label.pack()
+
+    def update_gif(index):
+        img = ImageTk.PhotoImage(gif_images[index])
+        label.config(image=img)
+        label.image = img
+        root.after(100, update_gif, (index + 1) % len(gif_images))
+
+    update_gif(0)
+
+def turn_on():
+    global is_on
+    is_on = True
+    label.config(text="Состояние: ON")
+
+def turn_off():
+    global is_on
+    is_on = False
+    label.config(text="Состояние: OFF")
+
+def exit_program():
+    root.destroy()
+root = tk.Tk()
+root.title("Управление")
+off_button = tk.Button(root, text="OFF", command=turn_off, width=10, height=2, activebackground='Orange', background='Red', default='active', state='active')
+exit_button = tk.Button(root, text="EXIT", command=exit_program, width=10, height=2)
+on_button = tk.Button(root, text="ON", command=turn_on, activebackground='Green', background='Blue')
+off_button.place(x=400, y=100)
+on_button.pack()
+off_button.pack()
+exit_button.pack()
+
+# Создаем поле для ввода пароля
+# password_entry = tk.Entry(root)
+# password_entry.pack()
+# Создаем кнопку для ввода пароля
+# password_button = tk.Button(root, text="Ввести пароль", command=handle_password_input)
+# password_button.pack()
+root.geometry("800x450")
+is_on = False  # Изначально выключено
+# Установим фоновую анимацию GIF
+set_background_gif("outerspace-58.gif")  # Укажите путь к вашей анимации GIF
+# Остальной код остается неизменным
+keyboard_mapping = {
+    'e': 'у',
+    'a': 'ф',
+    'd': 'в',
+    's': 'ы',
+    'w': 'ц',
+    # Добавьте остальные клавиши по аналогии
+}
+# Создаем функцию для проверки и выполнения действий
+def get_keyboard_layout():
+    clipboard_text = pyperclip.paste()
+    pyperclip.copy("Test")
+    keyboard.press_and_release("ctrl+c")
+    clipboard_text_after_copy = pyperclip.paste()
+    pyperclip.copy(clipboard_text)
+
+    if clipboard_text_after_copy == "Test":
+        return "en"
+    else:
+        return "ru"
+def check_and_execute_actions():
+    if is_on:   
+        while True:
+            image_location = imagesearch("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_504.png")
+            current_layout = get_keyboard_layout()
+            if (keyboard.is_pressed("q") and current_layout == "en") or (keyboard.is_pressed(57) and current_layout == "ru"):
+                break
+            
+            if image_location[0] != -1:
+                print(1)
+                # Если изображение найдено, получаем его центральные координаты
+                pyautogui.press('e')
+                pyautogui.press('e')
+                pyautogui.press('e')
+                pyautogui.press('e')
+                pyautogui.press('e')
+                pyautogui.press('e')
+                pyautogui.press('e')
+                print('Есть')
+                image_location1 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_355.png",confidence=0.930)            
+                if image_location1 is not None:     
+                    
+                    image_location2 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_356.png",confidence=0.970)          
+                    image_location3 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_357.png",confidence=0.970)
+                    image_location4 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_358.png",confidence=0.970)
+                    image_location5 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_359.png",confidence=0.970)
+                    image_location6 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_360.png",confidence=0.970)
+                    image_location7 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_361.png",confidence=0.990)
+                    image_location8 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_362.png",confidence=0.970)
+                    image_location9 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_507.png",confidence=0.990)
+                    image_location10 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_363.png",confidence=0.970)
+                    image_location11 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_364.png",confidence=0.970)
+                    image_location12 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_365.png",confidence=0.970)
+                    image_location13 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_366.png",confidence=0.970)
+                    image_location14 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_367.png",confidence=0.970)
+                    image_location15 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_368.png",confidence=0.970)
+                    image_location16 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_369.png",confidence=0.970)
+                    image_location17 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_370.png",confidence=0.970)
+                    image_location18 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_381.png",confidence=0.970)
+                    image_location19 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_372.png",confidence=0.970)
+                    image_location20 = pyautogui.locateOnScreen("C:/Users/Dmytryi/Documents/Lightshot/Screenshot_373.png",confidence=0.970)                        
+                    
+                    x, y, _, _ = image_location1  # Получаем координаты из объекта Box
+                    pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                    pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                    print('Есть1')
+                    time.sleep(1)
+                    if image_location2 is not None:
+                        x, y, _, _ = image_location2  # Получаем координаты из объекта Box
+                        pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                        pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                        pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                        time.sleep(0.5)
+                        pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                        time.sleep(1)
+
+                        if image_location3 is not None:
+                            x, y, _, _ = image_location3  # Получаем координаты из объекта Box
+                            pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                            pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                            pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                            time.sleep(0.5)
+                            pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                            print('Есть')
+                            time.sleep(1)
+
+                            if image_location4 is not None:
+                                x, y, _, _ = image_location4  # Получаем координаты из объекта Box
+                                pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                time.sleep(0.5)
+                                pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                time.sleep(1)
+
+                                
+                                if image_location5 is not None:
+                                    x, y, _, _ = image_location5  # Получаем координаты из объекта Box
+                                    pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                    pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                    pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                    time.sleep(0.5)
+                                    pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                    time.sleep(1)
+
+                                    if image_location6 is not None:
+                                        x, y, _, _ = image_location6  # Получаем координаты из объекта Box
+                                        pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                        pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                        pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                        time.sleep(0.5)
+                                        pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                        time.sleep(1)
+
+
+                                        if image_location7 is not None:
+                                            x, y, _, _ = image_location7  # Получаем координаты из объекта Box
+                                            pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                            pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                            pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                            time.sleep(0.5)
+                                            pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                            time.sleep(1)
+
+                                            if image_location8 is not None:
+                                                x, y, _, _ = image_location8  # Получаем координаты из объекта Box
+                                                pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                time.sleep(0.5)
+                                                pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                time.sleep(1)
+
+                                                if image_location9 is not None:
+                                                    x, y, _, _ = image_location9  # Получаем координаты из объекта Box
+                                                    pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                    pyautogui.click(x, y, button='left')  # Выполняем кли   к правой кнопкой мыши
+                                                    pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                    time.sleep(0.5)
+                                                    pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                    time.sleep(1)
+
+                                                    
+                                                    if image_location10 is not None:
+                                                        x, y, _, _ = image_location10  # Получаем координаты из объекта Box
+                                                        pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                        pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                        pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                        time.sleep(0.5)
+                                                        pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                        time.sleep(1)
+
+                                                        
+                                                        if image_location11 is not None:
+                                                            x, y, _, _ = image_location11  # Получаем координаты из объекта Box
+                                                            pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                            pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                            pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                            time.sleep(0.5)
+                                                            pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                            time.sleep(1)   
+
+                                                            
+                                                            if image_location12 is not None:
+                                                                x, y, _, _ = image_location12  # Получаем координаты из объекта Box
+                                                                pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                time.sleep(0.5)
+                                                                pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                time.sleep(1)
+
+                                
+                                                                if image_location13 is not None:
+                                                                    x, y, _, _ = image_location13  # Получаем координаты из объекта Box
+                                                                    pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                    pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                    pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                    time.sleep(0.5)
+                                                                    pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                    time.sleep(1)
+
+                                                                    if image_location14 is not None:
+                                                                        x, y, _, _ = image_location14  # Получаем координаты из объекта Box
+                                                                        pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                        pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                        pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                        time.sleep(0.5)
+                                                                        pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                        time.sleep(1)
+
+                                                                        
+                                                                        if image_location15 is not None:
+                                                                            x, y, _, _ = image_location15  # Получаем координаты из объекта Box
+                                                                            pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                            pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                            pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                            time.sleep(0.5)
+                                                                            pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                            time.sleep(1)
+
+                                                                            
+                                                                            if image_location16 is not None:
+                                                                                x, y, _, _ = image_location16  # Получаем координаты из объекта Box
+                                                                                pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                                pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                                pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                                time.sleep(0.5)
+                                                                                pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                                time.sleep(1)
+
+
+                                                                                
+                                                                                if image_location17 is not None:
+                                                                                    x, y, _, _ = image_location17  # Получаем координаты из объекта Box
+                                                                                    pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                                    pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                                    pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                                    time.sleep(0.5)
+                                                                                    pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                                    time.sleep(0.5)
+
+                                                                                    
+                                                                                    if image_location18 is not None:
+                                                                                        x, y, _, _ = image_location18  # Получаем коорди    наты из объекта Box
+                                                                                        pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                                        pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                                        pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                                        time.sleep(0.5)
+                                                                                        pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                                        time.sleep(1)
+
+                                                                                        
+                                                                                        if image_location19 is not None:
+                                                                                            x, y, _, _ = image_location19  # Получаем координаты из объекта Box
+                                                                                            pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                                            pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                                            pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                                            time.sleep(0.5)
+                                                                                            pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                                            time.sleep(1)
+
+                                                                                            
+                                                                                            if image_location20 is not None:
+                                                                                                x, y, _, _ = image_location20  # Получаем координаты из объекта Box
+                                                                                                pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                                                pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                                                pyautogui.moveTo(x, y)  # Перемещаем указатель мыши
+                                                                                                time.sleep(0.5)
+                                                                                                pyautogui.click(x, y, button='left')  # Выполняем клик правой кнопкой мыши
+                                                                                                time.sleep(1)
+                                                                                            else:
+                                                                                                print("Изображение Screenshot_310.png не найдено на экране.")
+                                                                                            if (keyboard.is_pressed("q") and current_layout == "en") or (keyboard.is_pressed(57) and current_layout == "ru"):
+                                                                                                break
+                                                                                            else:
+                                                                                                continue
+            
+            else:
+                break
+
+    label.lower()
+    root.update()
+    root.after(100, check_and_execute_actions)  # Запуск функции через 100 миллисекунд
+
+# Запускаем функцию для проверки и выполнения действий
+check_and_execute_actions()
+
+root.mainloop()
+
