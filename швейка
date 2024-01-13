@@ -1,39 +1,10 @@
-
-import tkinter as tk
 from python_imagesearch.imagesearch import *
-import pyautogui
-import imageio
-from PIL import Image, ImageTk
+import pyautogui 
+import time 
+import tkinter as tk
 import pygame.mixer
 import keyboard
-from bson import ObjectId
-from pymongo import MongoClient
-import threading
-from datetime import datetime, timedelta
-import time
-
-# Определение глобальных переменных
-is_on = False
-# license_expired = False
-# license_start_time = datetime.now().replace(month=10, year=2023, day=2, hour=9, minute=44, second=0, microsecond=0)
-# license_end_time = datetime.now().replace(month=10, year=2030, day=2, hour=9, minute=44, second=10, microsecond=0)
-
-def set_background_gif(gif_path):
-    gif = imageio.mimread(gif_path)
-    gif_images = [Image.fromarray(img) for img in gif]
-
-    global label
-    label = tk.Label(root)
-    label.pack()
-
-    def update_gif(index):
-        img = ImageTk.PhotoImage(gif_images[index])
-        label.config(image=img)
-        label.image = img
-        root.after(100, update_gif, (index + 1) % len(gif_images))
-
-    update_gif(0)
-
+# Функции для обработки событий кнопок
 def turn_on():
     global is_on
     is_on = True
@@ -46,26 +17,33 @@ def turn_off():
 
 def exit_program():
     root.destroy()
+
+# Создаем главное окно
 root = tk.Tk()
 root.title("Управление")
-off_button = tk.Button(root, text="OFF", command=turn_off, width=10, height=2, activebackground='Orange', background='Red', default='active', state='active')
-exit_button = tk.Button(root, text="EXIT", command=exit_program, width=10, height=2)
-on_button = tk.Button(root, text="ON", command=turn_on, activebackground='Green', background='Blue')
-off_button.place(x=400, y=100)
+
+# Устанавливаем размер окна на 320x400 пикселей
+root.geometry("320x400")
+
+# Создаем метку для отображения состояния
+label = tk.Label(root, text="Состояние: ")
+label.pack()
+
+# Создаем кнопки ON, OFF и EXIT
+is_on = False  # Изначально выключено
+on_button = tk.Button(root, text="ON", command=turn_on)
 on_button.pack()
+    
+off_button = tk.Button(root, text="OFF", command=turn_off, width=10, height=2)
 off_button.pack()
+
+exit_button = tk.Button(root, text="EXIT", command=exit_program, width=10, height=2)
 exit_button.pack()
 
-# Создаем поле для ввода пароля
-# password_entry = tk.Entry(root)
-# password_entry.pack()
-# Создаем кнопку для ввода пароля
-# password_button = tk.Button(root, text="Ввести пароль", command=handle_password_input)
-# password_button.pack()
-root.geometry("800x450")
-is_on = False  # Изначально выключено
-# Установим фоновую анимацию GIF
-set_background_gif("outerspace-58.gif")  # Укажите путь к вашей анимации GIF
+# button_e1 = imagesearch("C:/qwerty/eee.jpg") 
+# button_e = imagesearch("C:/qwerty/e.jpg")
+# button_q = imagesearch("C:/qwerty/q.jpg")
+# НАДО JPG
 # Остальной код остается неизменным
 keyboard_mapping = {
     'e': 'у',
@@ -148,4 +126,3 @@ def check_and_execute_actions():
 check_and_execute_actions()
 
 root.mainloop()
-
